@@ -8,6 +8,11 @@ You should only check the low and high logic levels. FT260 ise 3.3V TTL logic.
 The I2C slave device could be a sensor, nonvolatile memory, low speed ADC or DAC, and many others.
 Each have their own 7 bit address. There may be no two devices with same same addresses on the bus.
 
+## Fork Change
+
+This fork changed the FT260 library to v1.1.2 x64 version to work with x64 python.
+
+Configurable delay also added to the register read function. This is due to some IC takes time to response command. 
 ## Functionality
 
 I2C address scanner. It shows 7 bit addresses that acknowledge themselves on the bus.
