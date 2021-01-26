@@ -34,7 +34,7 @@ An standalone executable can be easily build with PyInstaller.
 
 ## Requirements
 
-Python 32bit is required since FTDI provides only 32bit FT260 library binaries. Windows OS only.
+Python 64bit is required. Windows OS only.
 The program can run on Linux, but without any FT260 operations since FTDI provides only windows library binaries.
 
 The GUI is build with tkinter library.
@@ -50,6 +50,8 @@ This is an example of GUI interface interacting with MPU6050 accelerometer/gyros
 by writing to 8bit control register. Then actual accelerometer reading can be loaded by reading 16bit register.
 
   ![ftI2cGui](img/ftI2cGui.png)
+
+*This fork added a delay setting which doesn't show on this picture.
 
 ## Build standalone application
 
