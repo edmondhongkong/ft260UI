@@ -31,6 +31,15 @@ class _ConfigFrame(tk.Frame):
         self.entry_address.delete(0, tk.END)
         self.entry_address.insert(0, new_value)
 
+    @property
+    def delay(self):
+        return self.entry_delay.get()
+
+    @delay.setter
+    def delay(self, new_value):
+        self.entry_delay.delete(0, tk.END)
+        self.entry_delay.insert(0, new_value)
+
     def open(self):
         ft.open_ftlib()
         if self.i2c_handle is not None:
@@ -79,8 +88,10 @@ Do you see FT260 in device list?"""
         self.grid_columnconfigure(4, weight=1)
         label_clock = tk.Label(self, text="Clock rate [kbps]:")
         label_address = tk.Label(self, text="I2C slave device address [hex]:")
+        label_delay = tk.Label(self, text="Delay between commands [ms]:")
         self.entry_clock = tk.Entry(self, width=6)
         self.entry_address = tk.Entry(self, width=6)
+        self.entry_delay = tk.Entry(self, width=6)
         self.button_open = tk.Button(self, text="Open device", command=self.open)
         self.button_close = tk.Button(self, text="Close device", command=self.close, state="disabled")
         self.entry_scroll_message = tkst.ScrolledText(self, height="3", width="20")
@@ -90,10 +101,12 @@ Do you see FT260 in device list?"""
         self.entry_clock.grid(row=0, column=1)
         label_address.grid(row=1, column=0, padx=(3, 0))
         self.entry_address.grid(row=1, column=1)
+        label_delay.grid(row=2, column=0, padx=(3, 0))
+        self.entry_delay.grid(row=2, column=1)
         self.button_open.grid(row=0, column=2, padx=(3, 0))
         self.button_close.grid(row=0, column=3)
         self.entry_scroll_message.grid(row=0, column=4, rowspan=3, sticky="nsew", padx=5)
-        label_msb_warning.grid(row=2, column=0, padx=(3, 0), columnspan=4)
+        label_msb_warning.grid(row=3, column=0, padx=(3, 0), columnspan=4)
 
 
 class _DeviceScannerFrame(tk.Frame):
@@ -146,6 +159,8 @@ class _RegFrame(tk.Frame):
                       dev_addr,
                       FT260_I2C_FLAG.FT260_I2C_START,
                       struct.pack("".join(packstr), reg_addr))
+        #Delay for IC to run the commands
+        time.sleep(float(config.delay)/1000)
         # Register address is send. Can now retrieve register data
         (ft_status, data_real_read_len, readData, status) = ft.ftI2cRead(config.i2c_handle,
                                                                          dev_addr,
@@ -420,10 +435,11 @@ def main():
     global config
 
     parent = tk.Tk()
-    parent.title("FT260 I2C")
+    parent.title("FT260 I2C x64")
     config = _ConfigFrame(parent)
     config.clock = "100"
     config.slave_address = "0x68"
+    config.delay = "500"
     config.pack(fill="x", expand=False)
     separator = ttk.Separator(parent, orient=tk.HORIZONTAL)
     separator.pack(fill="x")
